@@ -1,7 +1,7 @@
 #include "Transaccion.h"
 
 
-Transaccion::Transaccion(int id, Cliente* cuentaOrigen, string cuentaDestino, int monto, string ubicacion, string fecha, string hora){
+Transaccion::Transaccion(int id, string cuentaOrigen, string cuentaDestino, int monto, string ubicacion, string fecha, string hora){
 
     this -> id = id;
     this -> cuentaOrigen = cuentaOrigen;
@@ -13,14 +13,13 @@ Transaccion::Transaccion(int id, Cliente* cuentaOrigen, string cuentaDestino, in
 
 }
 Transaccion::~Transaccion(){
-    delete cuentaOrigen;
 }
 
 int Transaccion::getID(){
     return id;
 }
 
-Cliente* Transaccion::getCtaOrigen(){
+string Transaccion::getCtaOrigen(){
     return cuentaOrigen;
 }
 
@@ -48,6 +47,6 @@ string Transaccion::getHora(){
 void Transaccion::mostrar()
 {
     cout<<"ID: " << id << ", Cuenta Origen: ";
-    cuentaOrigen->mostrar();
+    cout << cuentaOrigen << endl;
     cout<<", Cuenta Destino: " << cuentaDestino << ", Monto: " << monto << ", Ubicacion: " << ubicacion << ", Fecha: " << fecha << ", Hora: " << hora << endl;
 }

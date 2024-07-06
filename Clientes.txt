@@ -1,6 +1,6 @@
-12345678-9,Gustavo Fring
-98765432-1,Wade Wilson
-51440981-2,Joseph Joestar
-21415519-2,Solid Snake
-13245679-8,Homelander
-55987123-4,Arthur Morgan
+Gustavo Fring,12345678-9
+Wade Wilson,98765432-1
+Joseph Joestar,51440981-2
+Solid Snake,21415519-2
+Homelander,13245679-8
+Arthur Morgan,55987123-4

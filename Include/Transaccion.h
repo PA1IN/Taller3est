@@ -7,7 +7,7 @@ using namespace std;
 class Transaccion{
 private:
     int id; 
-    Cliente* cuentaOrigen;
+    string cuentaOrigen;
     string cuentaDestino;
     int monto;
     string ubicacion;
@@ -15,11 +15,11 @@ private:
 
 public:
 
-    Transaccion(int,Cliente*,string,int,string,string,string);
+    Transaccion(int,string,string,int,string,string,string);
     ~Transaccion();
 
     int getID();
-    Cliente* getCtaOrigen();
+    string getCtaOrigen();
     string getCtaDestino();
     int getMonto();
     string getUbicacion();

@@ -6,7 +6,8 @@
 #include "Cliente.h"
 #include "ABB.h"
 #include "AVL.h"
-
+#include <fstream>
+#include <sstream>
 using namespace std;
 
 queue<Transaccion*> fraudulentas;
@@ -35,23 +36,28 @@ void ingresarTransaccion(){ //despliega la opcion 1 del menú
     cout << "Ingrese fecha (dd/mm/yyyy): ";
     string fecha; cin >> fecha; cout << endl;
  
-    cout << "Ingrese hora (hh:mm): ";            // cambiar para leer estos datos desde el archivo
+    cout << "Ingrese hora (hh:mm): ";// cambiar para leer estos datos desde el archivo
     string hora; cin >> hora; cout <<endl;
 
-    cout <<"Ingrese un monto: ";
-    int monto; cin >> monto; cout << endl;
+    cout <<"Ingrese un monto (ej: 1000): ";
+    string mon; cin >> mon; cout << endl;
 
-    Transaccion* transaccion = new Transaccion(id++,c,ctaDest, monto, ciudad, fecha, hora);
+    int monto = stoi(mon);
+
+    Transaccion* transaccion = new Transaccion(id,rut,ctaDest, monto, ciudad, fecha, hora);
     arbolABB.insertar(transaccion);
     arbolAVL.insertar(transaccion);
 
     cout << "Transaccion correctamente ingresada." << endl;
+    cout << "ID de transaccion: " << id << endl;
+    id++;
 }
 
 void buscarTransaccion(){
 
     cout << "Ingresa id a buscar: ";
-    int id; cin >> id; cout << endl;
+    string input; cin >> input; cout << endl;
+    int id = stoi(input);
     arbolAVL.buscarPorID(id);
 }
 
@@ -66,10 +72,6 @@ void generarInforme() //agregar logica para generar informe
 {
     cout << "Generando informe de todas las transacciones..." << endl;
 
-}
-
-void leerTransacciones(){ //logica para leer txt de transacciones y tambien para leer el de clientes 
-    
 }
 
 void menuBanco(){
@@ -110,8 +112,93 @@ void menuBanco(){
     }
 }
 
+vector <string> dividirLinea(string str, char chr){ //divide la linea en partes usando el char ',' y retorna un vector de strings que son las partes
+    vector<string> partes;
+    stringstream ss(str);
+    string parte;
+
+    while(getline(ss, parte, chr)){
+        partes.push_back(parte);
+    }
+    return partes;
+}//fin splitLine
+
+void leerClientes(){ //lee el archivo de clientes
+
+    string linea;
+    ifstream arch ("Clientes.txt");
+    char split = ',';
+
+    if (!arch.is_open()) {
+    cout << "No se pudo abrir el archivo de clientes." << endl;
+    return;
+    }
+
+    while(getline(arch,linea)){
+
+        vector<string> partes = dividirLinea(linea,split);
+        string nombre = partes[0];
+        string rut = partes[1];
+
+        Cliente* c = new Cliente(nombre,rut);
+        clientes.push(c);
+    }
+
+    arch.close();
+
+}
+
+/*Cliente* buscarCliente(string ctaOrigen){ //busca si existe un cliente con su rut para asociarlo a la transaccion
+
+    queue<Cliente*> aux = clientes;
+
+    while(!aux.empty()){
+        Cliente* temp = aux.front();
+        if(temp -> getRut() == ctaOrigen){
+            return temp;
+        }
+        aux.pop();
+    }
+    return new Cliente("nuevoUsuario",ctaOrigen);
+}
+*/
+
+void leerTransacciones(){
+
+    string linea;
+    ifstream arch ("Transacciones.txt");
+    char split = ',';
+
+    if (!arch.is_open()) {
+        cout << "No se pudo abrir el archivo de clientes." << endl;
+        return;
+    }
+
+    while(getline(arch,linea)){
+
+        vector<string> partes = dividirLinea(linea,split);
+        int id = stoi(partes[0]);
+        string ctaOr = partes[1];
+        string ctaDe = partes[2];
+        int monto = stoi(partes[3]);
+        string ubi = partes[4];
+        string fecha = partes[5];
+        string hora = partes[6];
+
+        //Cliente* c = buscarCliente(ctaOr);
+
+        Transaccion* t = new Transaccion(id,ctaOr,ctaDe,monto,ubi,fecha,hora);
+        arbolABB.insertar(t);
+        arbolAVL.insertar(t);
+    }
+
+    arch.close();
+
+}
+
 int main()
 {
+    leerClientes(); leerTransacciones();
     menuBanco();
     return 0;
 }
